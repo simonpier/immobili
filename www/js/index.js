@@ -17,15 +17,29 @@
  * under the License.
  */
 var app = {
+
+    storage: window.localStorage,
+	
     initialize: function() {
         this.bind();
     },
      
     bind: function() {
  	document.addEventListener('deviceready', this.deviceready, false);
-    	$("#btnSalva").on("tap", scheda.save);
-		$("#btnInviaSchede").on("tap", scheda.send); 
-		$("#btnExit").on("tap", app.exit);
+    $("#btnSalva").on("tap", function() {
+  
+		scheda.data.nome = $("#txtNome").val();
+		scheda.data.indirizzo = $("#txtIndirizzo").val();
+		scheda.data.descrizione = $("#txtDescrizione").val();
+		scheda.data.prezzo = $("#txtPrezzo").val();
+  
+		scheda.save();
+  
+		navigator.notification.alert("Salvataggio effettuato!",function() {},"Informazione");
+	});
+			
+	$("#btnInviaSchede").on("tap", scheda.send); 
+	$("#btnExit").on("tap", app.exit);
 },
      
     deviceready: function() {
@@ -41,14 +55,17 @@ var app = {
 $(document).ready(function() {
     app.initialize();
 });
+
 var scheda = {
+	
+	data: {nome: "", indirizzo: "", descrizione: "", prezzo: "0,00"},
+	
     save: function() {
-        // Istruzioni per il salvataggio
-        navigator.notification.alert("Salvataggio effettuato!", 
-                                     function() {},
-                                     "Informazione",
-                                     "OK");
-    }
+       if (scheda.data.nome != "") {
+			app.storage.setItem(scheda.data.nome, JSON.stringify(scheda.data));
+        }
+    },
+	
     send: function() {
         navigator.notification.confirm("Confermi l'invio delle schede?",
                                        scheda.confirmedSend,
@@ -63,7 +80,7 @@ var scheda = {
             //Istruzioni per l'invio
             navigator.notification.alert("Schede inviate!", function(){}, "Informazione");
         }
-    }
+    },
 	
 	exit: function() {
  
@@ -75,5 +92,5 @@ var scheda = {
             },
             "Informazione",
             "Sì,No");
-		}
+		},
 }
