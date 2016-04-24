@@ -24,8 +24,7 @@ var app = {
     bind: function() {
  	document.addEventListener('deviceready', this.deviceready, false);
     	$("#btnSalva").on("tap", scheda.save);
-		$("#btnInviaSchede").on("tap", scheda.send);  
-		//$("#btnExit").on("tap", app.exit);
+		$("#btnInviaSchede").on("tap", scheda.send);    
 },
      
     deviceready: function() {
@@ -64,15 +63,4 @@ var scheda = {
             navigator.notification.alert("Schede inviate!", function(){}, "Informazione");
         }
     }
-	/* exit: function() {
- 
-    navigator.notification.confirm(
-          "Vuoi uscire dall'applicazione?",
-            function(buttonIndex) {
-                 
-                if (buttonIndex == 1) navigator.app.exitApp();
-            },
-            "Informazione",
-            "Sì,No");
-	}*/
 }
