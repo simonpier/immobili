@@ -39,7 +39,8 @@ var app = {
  
 $(document).ready(function() {
     app.initialize();
-}};
+});
+
 var scheda = {
     save: function() {
         // Istruzioni per il salvataggio
@@ -63,3 +64,4 @@ var scheda = {
             navigator.notification.alert("Schede inviate!", function(){}, "Informazione");
         }
     }
+}
