@@ -24,7 +24,8 @@ var app = {
     bind: function() {
  	document.addEventListener('deviceready', this.deviceready, false);
     	$("#btnSalva").on("tap", scheda.save);
-	$("#btnInviaSchede").on("tap", scheda.send);    
+		$("#btnInviaSchede").on("tap", scheda.send);  
+		$("#btnExit").on("tap", app.exit);
 },
      
     deviceready: function() {
