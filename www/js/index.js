@@ -61,6 +61,26 @@ var app = {
 						$("#txtPrezzo").val(scheda.data.prezzo);
 						$.mobile.changePage($("#scheda"));
 					});
+					
+				li.on("taphold", function() {
+  
+					var key = $(this).text();
+     
+					navigator.notification.confirm(
+             
+					"Confermi l'eliminazione della scheda?",
+  
+					function(buttonIndex) {
+					if (buttonIndex == 1) {
+							scheda.delete(key);
+							$.mobile.changePage($("#elencoSchede"));
+							}
+					},
+  
+					"Conferma eliminazione",
+  
+					"Sì,No");
+				});
 				
                 elencoSchede.append(li);
             }
@@ -91,6 +111,13 @@ var scheda = {
     save: function() {
        if (scheda.data.nome != "") {
 			app.storage.setItem(scheda.data.nome, JSON.stringify(scheda.data));
+        }
+    },
+	
+	delete: function(nome) {
+     
+        if (nome != "") {
+            app.storage.removeItem($.trim(nome));
         }
     },
 	
