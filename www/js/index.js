@@ -40,6 +40,34 @@ var app = {
 			
 	$("#btnInviaSchede").on("tap", scheda.send); 
 	$("#btnExit").on("tap", app.exit);
+	$("#elencoSchede").on("pagebeforeshow",
+         
+        function(event) {
+             
+            var elencoSchede = $("#liElencoSchede");
+            elencoSchede.html("");
+             
+            for (var i=0; i<app.storage.length; i++) {
+                 
+                var li = $("<li data-theme='c'> <a href='#' data-transition='slide'>" + app.storage.key(i) + "</a></li>");
+				
+				li.on("tap", function() {
+         
+					scheda.load($(this).text());
+         
+						$("#txtNome").val(scheda.data.nome);
+						$("#txtIndirizzo").val(scheda.data.indirizzo);
+						$("#txtDescrizione").val(scheda.data.descrizione);
+						$("#txtPrezzo").val(scheda.data.prezzo);
+						$.mobile.changePage($("#scheda"));
+					});
+				
+                elencoSchede.append(li);
+            }
+             
+            elencoSchede.listview("refresh");
+        }
+    );
 },
      
     deviceready: function() {
@@ -64,6 +92,16 @@ var scheda = {
        if (scheda.data.nome != "") {
 			app.storage.setItem(scheda.data.nome, JSON.stringify(scheda.data));
         }
+    },
+	
+	 load: function(nome) {
+     
+        if (nome != "") {
+             
+            var value = app.storage.getItem($.trim(nome));
+            scheda.data = JSON.parse(value);
+        }
+		
     },
 	
     send: function() {
