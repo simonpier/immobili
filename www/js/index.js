@@ -90,11 +90,19 @@ var app = {
     );
 },
      
-	 
+	isOnline: function() {
+         
+        var networkState = navigator.connection.type;
+         
+        return ((networkState != Connection.NONE) && (networkState != Connection.UNKNOWN));
+    },
+	
     deviceready: function() {
         app.start();
     },
- 
+	
+	
+	
     start: function() {
      
         
