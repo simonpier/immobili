@@ -180,11 +180,13 @@ var scheda = {
 		
     },
 	
-    send: function() {
-        navigator.notification.confirm("Confermi l'invio delle schede?",
-                                       scheda.confirmedSend,
-                                       "Conferma invio",
-                                       "Sì,No");
+    send: function(listaSchede, successCallback, failCallback) {
+		$.ajax({
+            url: "http://www.backendserver.it/schedeImmobiliari",
+            type: "POST",
+            data: listaSchede})
+        .done(function() {app.storage.clear(); successCallback();})
+        .fail(failCallback);			
         },
 
     confirmedSend: function(buttonIndex) {
