@@ -38,7 +38,48 @@ var app = {
 		navigator.notification.alert("Salvataggio effettuato!",function() {},"Informazione");
 	});
 			
-	$("#btnInviaSchede").on("tap", scheda.send); 
+	$("#btnInviaSchede").on("tap", function() {
+  
+    if (app.isOnline()) {
+  
+        navigator.notification.confirm(
+  
+            "Confermi l'invio delle schede?",
+  
+            function(buttonIndex) {
+  
+                if (buttonIndex == 1) {
+  
+                    var listaSchede = [];
+  
+					for (var i=0; i<app.storage.length; i++) {
+  
+						scheda.load(app.storage.key(i));
+						listaSchede.push(scheda.data);
+						}
+  
+					scheda.send(listaSchede,
+  
+					function() {
+  
+						navigator.notification.alert("Schede inviate!", function(){},"Informazione");
+						},
+  
+					function() {
+  
+						navigator.notification.alert("Si è verificato un problema durante l'invio delle schede!", function(){},"Errore");
+					});
+				}
+            }
+    },
+  
+            "Conferma invio", 
+            "Sì,No");
+		} else {
+  
+        navigator.notification.alert("Connessione Internet non disponibile!", function(){},"Informazione");
+		}
+	}); 
 	$("#btnExit").on("tap", app.exit);
 	$("#elencoSchede").on("pagebeforeshow",
          
@@ -90,6 +131,13 @@ var app = {
     );
 },
      
+	isOnline: function() {
+         
+        var networkState = navigator.connection.type;
+         
+        return ((networkState != Connection.NONE) && (networkState != Connection.UNKNOWN));
+    },
+	
     deviceready: function() {
         app.start();
     },
@@ -131,11 +179,13 @@ var scheda = {
 		
     },
 	
-    send: function() {
-        navigator.notification.confirm("Confermi l'invio delle schede?",
-                                       scheda.confirmedSend,
-                                       "Conferma invio",
-                                       "Sì,No");
+    send: function(listaSchede, successCallback, failCallback) {
+		 $.ajax({
+            url: "http://www.backendserver.it/schedeImmobiliari",
+            type: "POST",
+            data: listaSchede})
+        .done(function() {app.storage.clear(); successCallback();})
+        .fail(failCallback);
         },
 
     confirmedSend: function(buttonIndex) {
